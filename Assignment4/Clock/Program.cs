@@ -4,16 +4,17 @@
     {
         public static void Main()
         {
-            Clock c = new Clock();
+            List<Time> alarm = new List<Time>();
+            Clock c = new Clock(1, alarm);
+            alarm.Add(new Time(12, 25));
             c.Tick += Tick;
             c.Alarm += Alarm;
-            c.SetAlarm(5);
             c.Start();
         }
 
         public static void Tick(object sender)
         {
-            Console.WriteLine("Tick");
+            Console.WriteLine("Tick...");
         }
 
         public static void Alarm(object sender)

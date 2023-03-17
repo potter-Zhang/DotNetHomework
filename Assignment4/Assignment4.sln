@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Linklist", "Assignment4\Linklist.csproj", "{5365C549-7C4F-4B7B-8FE6-77A999F547F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clock", "Clock\Clock.csproj", "{82226564-7961-48C2-BC3F-0028E683281B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clock", "Clock\Clock.csproj", "{82226564-7961-48C2-BC3F-0028E683281B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Linklist", "Linklist\Linklist.csproj", "{0302323A-4360-4EA7-8C89-585694921831}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5365C549-7C4F-4B7B-8FE6-77A999F547F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5365C549-7C4F-4B7B-8FE6-77A999F547F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5365C549-7C4F-4B7B-8FE6-77A999F547F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5365C549-7C4F-4B7B-8FE6-77A999F547F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{82226564-7961-48C2-BC3F-0028E683281B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{82226564-7961-48C2-BC3F-0028E683281B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82226564-7961-48C2-BC3F-0028E683281B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82226564-7961-48C2-BC3F-0028E683281B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0302323A-4360-4EA7-8C89-585694921831}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0302323A-4360-4EA7-8C89-585694921831}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0302323A-4360-4EA7-8C89-585694921831}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0302323A-4360-4EA7-8C89-585694921831}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
