@@ -44,13 +44,13 @@ namespace OrderManagement
                 return query;
             case Request.Customer:
                 query = from order in orders
-                        where order.Customer == parameter
+                        where order.Customers.Name == parameter
                         orderby order.ID
                         select order;
                 return query;
             case Request.ProductName:
                 query = from order in orders
-                        where order.OrderDetails.Any(x => x.Name == parameter)
+                        where order.OrderDetails.Any(x => x.Goods.Name == parameter)
                         orderby order.ID
                         select order;
                 return query;
@@ -87,7 +87,7 @@ namespace OrderManagement
         if (query.Count() == 0)
             throw new Exception("error: can't delete, order missing!");
         var q = from detail in query.First().OrderDetails
-                where detail.Name == name
+                where detail.Goods.Name == name
                 select detail;
         if (q.Count() == 0)
             throw new Exception("error: can't delete, orderdetail missing!");
@@ -118,9 +118,6 @@ namespace OrderManagement
     {
         orders.Sort((x, y) => x.ID - y.ID);
     }
-
-
-
 
 
     }

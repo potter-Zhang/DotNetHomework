@@ -12,15 +12,21 @@ namespace OrderManagement
         
         public int ID { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
-        public string Customer { get; set; }
+        public Customer Customers { get; set; }
         //public int Price { get; set; }
 
-        public Order(int id, List<OrderDetail> orderdetails, string customer)
+        public Order(int iD, Customer customer, List<OrderDetail> details)
         {
-            ID = id;
-            OrderDetails = orderdetails;
-            Customer = customer;
-            //Price = price;
+            ID = iD;
+            Customers = customer;
+            OrderDetails = details;
+        }
+
+        public double Sum()
+        {
+            double sum = 0;
+            OrderDetails.ForEach(x => sum += x.TotalPrice);
+            return sum;
         }
         public Order()
         {
@@ -41,13 +47,13 @@ namespace OrderManagement
             //return $"order id: {ID}\n";
             StringBuilder s = new StringBuilder();
             s.Append("--------------\n");
-            s.Append($"order id: {ID}\ncustomer: {Customer}\nproduct name\t number\n");
+            s.Append($"order id: {ID}\ncustomer: {Customers.Id}\t{Customers.Name}\nproduct name\t price\tnumber\ttotal\n");
             
             foreach (OrderDetail orderdetail in OrderDetails)
             {
                 s.AppendLine(orderdetail.ToString());
             }
-            
+            s.AppendLine($"total = {Sum()}");
             return s.ToString();
         }
     }

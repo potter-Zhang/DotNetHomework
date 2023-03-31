@@ -8,18 +8,20 @@ namespace OrderManagement
 {
     public class OrderDetail
     {
-        public string Name { get; set; }
+        public Good Goods { get; set; }
         public int Number { get; set; }
+        public double TotalPrice { get; set; }
 
-        public OrderDetail(string name, int number)
+       public OrderDetail(Good goods, int number)
         {
-            Name = name; 
+            Goods = goods;
             Number = number;
+            TotalPrice = goods.Price * number;
         }
 
         public override string ToString()
         {
-            return $"{Name, -11}\t{Number}";
+            return $"{Goods.Name, -17}{Goods.Price, -7}{Number,-8}{TotalPrice, -5}";
         }
 
         public override bool Equals(object obj)
@@ -27,7 +29,7 @@ namespace OrderManagement
             var other = obj as OrderDetail;
             if (other == null)
                 return false;
-            return Name == other.Name;
+            return Goods.Name == other.Goods.Name;
         }
     }
 }

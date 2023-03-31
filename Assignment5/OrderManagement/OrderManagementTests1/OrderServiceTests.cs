@@ -11,47 +11,40 @@ namespace OrderManagement.Tests
     [TestClass()]
     public class OrderServiceTests
     {
+        public void Init()
+        {
+            Good apple = new Good("apple", 10.0);
+            Good banana = new Good("banana", 20.0);
+            List<OrderDetail> details = new List<OrderDetail>();
+            details.Add(new OrderDetail(apple, 5));
+            details.Add(new OrderDetail(banana, 6));
+            Customer customer = new Customer(1, "harry");
+            Order order = new Order(1, customer, details);
+            OrderService.AddOrder(order);
+        }
         [TestMethod()]
         public void SearchTest()
         {
-            Order odr = new Order();
-            odr.Customer = "harry";
-            odr.ID = 1;
-            OrderDetail detail = new OrderDetail("box", 1);
-
-            odr.OrderDetails.Add(detail);
-            OrderService.AddOrder(odr);
-
-            Assert.AreEqual(odr.Customer, OrderService.Search(Request.ID, "1").First().Customer);
+            Init();
+            Assert.AreEqual("harry", OrderService.Search(Request.ID, "1").First().Customers.Name);
         }
 
         [TestMethod()]
         public void AddOrderTest()
         {
-            Order odr = new Order();
-            odr.Customer = "harry";
-            odr.ID = 1;
-            List<OrderDetail> odrlist;
-            odrlist = new List<OrderDetail>();
-            OrderDetail detail = new OrderDetail("box", 1);
-            odrlist.Add(detail);
-            odr.OrderDetails.Add(detail);
-            OrderService.AddOrder(odr);
-            Assert.AreEqual(odr.Customer, OrderService.Orders[0].Customer);
-            Assert.AreEqual(odr.ID, OrderService.Orders[0].ID);
-            CollectionAssert.AreEqual(OrderService.Orders[0].OrderDetails, odrlist);
+            Init();
+            Good apple = new Good("apple", 10.0);
+            Good banana = new Good("banana", 20.0);
+            List<OrderDetail> details = new List<OrderDetail>();
+            details.Add(new OrderDetail(apple, 5));
+            details.Add(new OrderDetail(banana, 6));
+            CollectionAssert.AreEqual(OrderService.Orders[0].OrderDetails, details);
         }
 
         [TestMethod()]
         public void DeleteOrderTest()
         {
-            Order odr = new Order();
-            odr.Customer = "harry";
-            odr.ID = 1;    
-            OrderDetail detail = new OrderDetail("box", 1);
-            
-            odr.OrderDetails.Add(detail);
-            OrderService.AddOrder(odr);
+            Init();
             OrderService.DeleteOrder(1);
             Assert.IsTrue(OrderService.Orders.Count() == 0);
         }
@@ -59,27 +52,23 @@ namespace OrderManagement.Tests
         [TestMethod()]
         public void DeleteOrderDetailTest()
         {
-            Order odr = new Order();
-            odr.Customer = "harry";
-            odr.ID = 1;
-            OrderDetail detail = new OrderDetail("box", 1);
-
-            odr.OrderDetails.Add(detail);
-            OrderService.AddOrder(odr);
-            OrderService.DeleteOrderDetail(1, "box");
-            Assert.IsTrue(OrderService.Orders[0].OrderDetails.Count() == 0);
+            Init();
+            OrderService.DeleteOrderDetail(1, "apple");
+            Assert.IsTrue(OrderService.Orders[0].OrderDetails.Count() == 1);
         }
 
         [TestMethod()]
         public void AddOrderDetailTest()
         {
-            Order odr = new Order();
-            odr.Customer = "harry";
-            odr.ID = 1;
-            OrderService.AddOrder(odr);
-            OrderDetail detail;
-            OrderService.AddOrderDetail(1, detail = new OrderDetail("box", 1));
-            Assert.AreEqual(detail, OrderService.Orders[0].OrderDetails[0]);
+            Init();
+            Good apple = new Good("apple", 10.0);
+            Good banana = new Good("banana", 20.0);
+            List<OrderDetail> details = new List<OrderDetail>();
+            details.Add(new OrderDetail(apple, 5));
+            details.Add(new OrderDetail(banana, 6));
+            OrderService.AddOrderDetail(1, new OrderDetail(new Good("orange", 1), 100));
+            details.Add(new OrderDetail(new Good("orange", 1), 100));
+            Assert.AreEqual(details, OrderService.Orders[0].OrderDetails[0]);
         }
 
         
@@ -90,7 +79,7 @@ namespace OrderManagement.Tests
             for (int i = 10; i > 0; i--) 
             {
                 Order odr = new Order();
-                odr.Customer = "harry";
+                
                 odr.ID = i;
                 OrderService.AddOrder(odr);
             }
