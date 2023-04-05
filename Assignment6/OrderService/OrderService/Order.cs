@@ -13,6 +13,18 @@ namespace OrderManagement
         public int ID { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
         public Customer Customers { get; set; }
+        public string CustomerName 
+        { 
+            get
+            {
+                return Customers.Name;
+            }
+        }
+
+        public string Date
+        {
+            get; set;
+        }
         //public int Price { get; set; }
 
         public Order(int iD, Customer customer, List<OrderDetail> details)
@@ -22,11 +34,14 @@ namespace OrderManagement
             OrderDetails = details;
         }
 
-        public double Sum()
+        public double Sum
         {
-            double sum = 0;
-            OrderDetails.ForEach(x => sum += x.TotalPrice);
-            return sum;
+            get
+            {
+                double sum = 0;
+                OrderDetails.ForEach(x => sum += x.TotalPrice);
+                return sum;
+            }
         }
         public Order()
         {
@@ -53,7 +68,7 @@ namespace OrderManagement
             {
                 s.AppendLine(orderdetail.ToString());
             }
-            s.AppendLine($"total = {Sum()}");
+            s.AppendLine($"total = {Sum}");
             return s.ToString();
         }
     }

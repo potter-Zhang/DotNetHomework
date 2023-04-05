@@ -81,6 +81,18 @@ namespace OrderManagement
         orders.Remove(query.First());
     }
 
+    public static int FindOrder(string id)
+    {
+            int ID = int.Parse(id);
+            for(int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders[i].ID == ID)
+                    return i;
+
+            }
+            return -1;
+    }
+
     public static void DeleteOrderDetail(int id, string name)
     {
         var query = Search(Request.ID, id.ToString());

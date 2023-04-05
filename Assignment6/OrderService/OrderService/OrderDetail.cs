@@ -9,14 +9,43 @@ namespace OrderManagement
     public class OrderDetail
     {
         public Good Goods { get; set; }
+        //public string _GoodsName;
+        public string GoodsName
+        {
+            get
+            {
+                return Goods.Name;
+            }
+            set
+            {
+                Goods.Name = value;
+            }
+        }
+
+        public double GoodsPrice { 
+            get
+            {
+                return Goods.Price;
+            }
+            set
+            {
+                Goods.Price = value;
+            }
+        }
         public int Number { get; set; }
-        public double TotalPrice { get; set; }
+        public double TotalPrice { 
+            get
+            {
+                return Number * Goods.Price;
+            }
+        
+        }
 
        public OrderDetail(Good goods, int number)
         {
             Goods = goods;
             Number = number;
-            TotalPrice = goods.Price * number;
+            
         }
 
         public override string ToString()
