@@ -1,4 +1,4 @@
-namespace Crawler
+namespace WebCrawler
 {
     internal static class Program
     {

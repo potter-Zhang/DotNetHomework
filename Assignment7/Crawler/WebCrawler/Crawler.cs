@@ -8,10 +8,10 @@ using System.Collections;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
-namespace Crawler
+namespace WebCrawler
 {
 
-    
+
     internal class Crawler
     {
         private Hashtable urls = new Hashtable();
@@ -19,6 +19,22 @@ namespace Crawler
         private string path = @"C:\Users\Harry\Desktop\";
         private StringBuilder sb = new StringBuilder();
         private string[] validForms = { "text/html" };
+        private component comp;
+
+        public string Message 
+        { get
+            {
+                return sb.ToString();
+            } 
+        }
+
+        struct component
+        {
+            public string protocol;
+            public string hostName;
+            public string filePath;
+        };
+
 
         public void Add(string url)
         {
@@ -30,20 +46,40 @@ namespace Crawler
             urls.Add(url, false);
         }
 
+        void GetComponent(string url)
+        {
+
+            int index = url.IndexOf("/");
+            comp.protocol = url.Substring(0, index);
+            url = url.Substring(index + 2);
+            int nextIndex = url.IndexOf("/");
+            if (nextIndex != -1)
+            {
+                comp.hostName = url.Substring(0, nextIndex);
+                comp.filePath = url.Substring(nextIndex + 1);
+            }
+            else
+            {
+                comp.hostName = url;
+                comp.filePath = "";
+            }
+
+        }
+
         public void SetPath(string path)
         {
-            if (path != null && path != "" && path[path.Length - 1] != '/') 
+            if (path != null && path != "" && path[path.Length - 1] != '/')
             {
                 this.path = @path + '/';
             }
-            
+
         }
 
         string AddPrefix(string url)
         {
             string http = "http://";
             string https = "https://";
-            if (url.StartsWith(http) || url.StartsWith(https) )
+            if (url.StartsWith(http) || url.StartsWith(https))
             {
                 return url;
             }
@@ -55,7 +91,7 @@ namespace Crawler
             while (true)
             {
                 string current = null;
-                foreach(string url in urls.Keys)
+                foreach (string url in urls.Keys)
                 {
                     if ((bool)urls[url])
                         continue;
@@ -64,17 +100,18 @@ namespace Crawler
                 if (current == null || count > 10)
                     break;
                 current = AddPrefix(current);
+                GetComponent(current);
                 sb.AppendLine("Crawling " + current + " page!");
                 string html = Download(current);
                 urls[current] = true;
-                count++;
+                
                 Parse(html, current);
 
 
             }
-           
+
             return sb.ToString();
-            
+
 
         }
         public string Download(string url)
@@ -82,34 +119,87 @@ namespace Crawler
             try
             {
                 WebClient webClient = new WebClient();
-                webClient.Encoding= Encoding.UTF8;
+                webClient.Encoding = Encoding.UTF8;
                 string html = webClient.DownloadString(url);
                 string fileName = count.ToString() + ".txt";
                 File.WriteAllText(path + fileName, html, Encoding.UTF8);
-                sb.AppendLine("Succeeded!");
+                sb.AppendLine("[Succeeded]");
 
                 var content = webClient.ResponseHeaders["Content-Type"];
                 bool toParse = false;
                 if (content != null)
-                {   
-                    foreach(string s in validForms)
+                {
+                    foreach (string s in validForms)
                     {
                         toParse |= content.StartsWith(s, StringComparison.OrdinalIgnoreCase);
-                    }  
-                } 
-                else
-                {
-                    toParse= true;
+                    }
                 }
                 //MessageBox.Show(sb.ToString());
-                return toParse ? html : "";
+                if (toParse)
+                {
+                    count++;
+                    return html;
+                }
+
+                return "";
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                sb.AppendLine("Failed! Error: " + ex.Message);
+                sb.AppendLine("[Failed] Error: " + ex.Message);
                 //MessageBox.Show(sb.ToString());
                 return "";
             }
+        }
+
+        bool Relative2Absolute(string url, out string completeUrl)
+        {
+            MatchCollection matches = new Regex(comp.hostName).Matches(url);
+            // same protocol
+            if (url.StartsWith("//"))
+            {
+                completeUrl = comp.protocol + url;
+                return matches.Count != 0;
+            }
+
+            // have protocol
+            if (url.StartsWith("http://") || url.StartsWith("https://"))
+            {
+                completeUrl = url;
+                return matches.Count != 0;
+            }
+
+            // root dir
+            if (url.StartsWith("/"))
+            {
+                completeUrl = comp.protocol + "//" + comp.hostName + url;
+                return true;
+            }
+
+            // ./
+            if (url.StartsWith("./"))
+            {
+                completeUrl = comp.protocol + "//" + comp.hostName + "/" + comp.filePath + "/" + url.Substring(2);
+                return true;
+            }
+
+            // ../
+            string pre = comp.protocol + "//" + comp.hostName + "/" + comp.filePath.Substring(0, Math.Max(0, comp.filePath.LastIndexOf("/")));
+            while (url.StartsWith("../"))
+            {
+                url = url.Substring(3);
+                pre = pre.Substring(0, pre.LastIndexOf("/"));
+            }
+
+            completeUrl = pre + "/" + url;
+            return true;
+
+        }
+
+        bool Validate(string url)
+        {
+            int k = url.IndexOf(';');
+            return k == -1;
+            // MatchCollection matches = new Regex(".").Matches(url);
         }
 
         public void Parse(string html, string webPagePath)
@@ -122,9 +212,9 @@ namespace Crawler
                 strRef = match.Value.Substring(match.Value.IndexOf('=') + 1).Trim('"', '\"', '#', ' ', '>');
                 if (strRef.Length == 0)
                     continue;
-                if (!CorrectFormat(strRef))
+                if (!Validate(strRef) || !Relative2Absolute(strRef, out strRef))
                     continue;
-                strRef = Path(webPagePath, strRef);
+                //strRef = Path(webPagePath, strRef);
                 if (urls[strRef] == null)
                 {
                     urls[strRef] = false;
@@ -159,3 +249,4 @@ namespace Crawler
 
     }
 }
+
